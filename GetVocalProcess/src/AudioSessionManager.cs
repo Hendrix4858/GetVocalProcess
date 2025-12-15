@@ -1,11 +1,12 @@
 ﻿using System.Diagnostics;
 using NAudio.CoreAudioApi;
+using NAudio.CoreAudioApi.Interfaces;
 
 namespace GetVocalProcess;
 
 public class AudioSessionInfo
 {
-    public string process_name { get; set; }
+    public string name { get; set; }
 }
 
 public class AudioSessionManager
@@ -46,18 +47,23 @@ public class AudioSessionManager
 
     private static void AddIfPlaying(List<AudioSessionInfo> list, AudioSessionControl s)
     {
-        if (!IsPlaying(s)) return;
+        if (!IsSessionActive(s)) return;
 
         var name = GetProcessName((int)s.GetProcessID);
         if (name == null) return;
 
-        list.Add(new AudioSessionInfo { process_name = name });
+        list.Add(new AudioSessionInfo { name = name });
     }
 
     private static bool IsPlaying(AudioSessionControl s)
     {
         if (s.SimpleAudioVolume.Mute) return false;
         return s.AudioMeterInformation.MasterPeakValue > 0.001f;
+    }
+    
+    private static bool IsSessionActive(AudioSessionControl s)
+    {
+        return s.State == AudioSessionState.AudioSessionStateActive;
     }
 
     private static string GetProcessName(int pid)
