@@ -47,7 +47,7 @@ public class AudioSessionManager
 
     private static void AddIfPlaying(List<AudioSessionInfo> list, AudioSessionControl s)
     {
-        if (!IsSessionActive(s)) return;
+        if (!IsSessionActive(s) || !IsPlaying(s)) return;
 
         var name = GetProcessName((int)s.GetProcessID);
         if (name == null) return;
@@ -58,7 +58,7 @@ public class AudioSessionManager
     private static bool IsPlaying(AudioSessionControl s)
     {
         if (s.SimpleAudioVolume.Mute) return false;
-        return s.AudioMeterInformation.MasterPeakValue > 0.001f;
+        return s.AudioMeterInformation.MasterPeakValue > 0.0005f;
     }
     
     private static bool IsSessionActive(AudioSessionControl s)

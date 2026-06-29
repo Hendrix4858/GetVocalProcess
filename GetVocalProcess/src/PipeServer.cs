@@ -33,7 +33,7 @@ public class PipeServer
         return new NamedPipeServerStream(
             PIPE_NAME,
             PipeDirection.InOut,
-            1,
+            NamedPipeServerStream.MaxAllowedServerInstances,
             PipeTransmissionMode.Byte,
             PipeOptions.Asynchronous
         );
